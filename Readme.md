@@ -3,30 +3,81 @@
 
 
 
+### How to run this app (Ubuntu)
+```
+clone app to ypur machine
+Run below commands on file directory
+- "python3 -m venv venv"
+- pip3 install requirements.txt
+- sh starts.sh 
+
+(I will create docker configs to run this app at future)
+```
+
+
+
 
 Now that we’ve learned about the anatomy of our endpoints and the different request methods that we should use, it’s time for some examples:
 
-| Method | URL                                      | Description                     |
-| ------ | ---------------------------------------- |---------------------------------|
-|`POST`  | `/sign_up`                                 | creates new user (signup)       | 
+| Method   | URL                                     | Description                                        |
+|----------|-----------------------------------------|----------------------------------------------------|
+| `POST`   | `/sign_up`                              | creates new user (signup)                          |
+| `POST`   | `/log_in`                               | logging in user, returns  access and refresh token |
+| `POST`   | `/create_post`                          | creates post for user, Requires a valid JWT        |
+| `DELETE` | `/delete_post`                          | deletes post, Requires a valid JWT                 |
+| `GET`    | `/read_posts`                           | fetches all posts, Requires a valid JWT            |
+| `PATCH`  | `/update_post`                          | update post, Requires a valid JWT                  |
+| `PATCH`  | `/like_post`                            | likes post, Requires a valid JWT                   |
+| `PATCH`  | `/dislike_post`                         | dislikes post, Requires a valid JWT                |
 
 
 
 
 
+#### **POST** `/sign_up`
+* Used for signing up a user. Accepts `first_name`, `mail`, and `password` as payload to create a driver . Returns driver's data.
+
+#### **POST** `/log_in`
+* Used for signing in a user. Accepts `mail` and `password` as payload. Returns tokens data.
+
+#### **POST** `/create_post`
+* Used for create post. Accepts `content` and `title` as payload.  
+
+#### **DELETE** `/delete_post`
+* Deletes post. Accepts post `_id` as paramater on url
+
+#### **GET** `/read_posts`
+* Reads all posts from db
+
+
+#### **PATCH** `/read_posts`
+* updates post fields, accepts post id at parameter and updated fileds as payload
+
+#### **PATCH** `/like_post`
+* Used for like post, accepts post id on url parameter
+
+#### **PATCH** `/dislike_post`
+* Used for dislike post, accepts post id on url parameter
+
+### Note
+* User can like and dislike posts many times (at least for now, will be fixed with many to many relation )
 
 
 ### Errors
 
 When errors occur the consumer will get a JSON payload verifying that an error occurred together with a reason for why the error occurred. 
 
+## Base response schema
 
-| Key       | Description                               |
-|-----------|-------------------------------------------|
-| `status`  | The HTTP code.                            |
-| `data`    | Return request's data                     |
-| `message` | A description of the error that occurred. |
-| `success` | Request's success status                  |
+| Key          | Description                               |
+|--------------|-------------------------------------------|
+| `status`     | The HTTP code.                            |
+| `data`       | Return request's data                     |
+| `message`    | A description of the error that occurred. |
+| `success`    | Request's success status                  |
+| `error_code` | if there is error, shows error code       |
+
+
 
 ## HTTP Response Status Codes
 

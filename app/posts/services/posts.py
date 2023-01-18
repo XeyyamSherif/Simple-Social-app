@@ -16,7 +16,7 @@ class PostService:
     async def delete_post(self, _id: int, db: Session):
         delete_post = PostRepo().delete_post(_id, db)
         if delete_post:
-            response = BaseResponseSchema(status=200, message='deleted')
+            response = BaseResponseSchema(status=200, message='deleted').dict()
             return JSONResponse(status_code=200, content=response)
 
     async def read_all_posts(self, db: Session):
@@ -32,9 +32,12 @@ class PostService:
     async def like_post(self, post_id, user_id, db):
         post = PostRepo().get_post_by_id(post_id, db)
         if post.owner_id != user_id:
+            new_dislike_count = post.dislike
+            if post.dislike != 0:
+                new_dislike_count = post.dislike - 1
             updated_data = {
                 'like': post.like + 1,
-                'dislike': post.dislike - 1
+                'dislike': new_dislike_count
 
             }
             PostRepo().update_post(post_id, updated_data, db)
@@ -47,14 +50,16 @@ class PostService:
     async def dislike_post(self, post_id, user_id, db):
         post = PostRepo().get_post_by_id(post_id, db)
         if post.owner_id != user_id:
-            if post.dislike != 0:
-                updated_data = {
-                    'like': post.like - 1,
-                    'dislike': post.dislike + 1
-                }
-                PostRepo().update_post(post_id, updated_data, db)
-                response = BaseResponseSchema(status=200, message='Post disliked').dict()
-                return JSONResponse(status_code=200, content=response)
+            new_like_count = post.like
+            if post.like != 0:
+                new_like_count = post.like - 1
+            updated_data = {
+                'like': new_like_count,
+                'dislike': post.dislike + 1
+            }
+            PostRepo().update_post(post_id, updated_data, db)
+            response = BaseResponseSchema(status=200, message='Post disliked').dict()
+            return JSONResponse(status_code=200, content=response)
         else:
             response = BaseResponseSchema(status=200, message='you cant dislike your posts').dict()
             return JSONResponse(status_code=200, content=response)
