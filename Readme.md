@@ -14,6 +14,8 @@ Run below commands on file directory
 (I will create docker configs to run this app at future)
 ```
 
+### Collections of apis at Postman
+ - https://www.postman.com/mogols/workspace/my-public/collection/13456460-3f846c6f-22f0-4aa3-86d4-3427ca39fffb?action=share&creator=13456460
 
 
 
